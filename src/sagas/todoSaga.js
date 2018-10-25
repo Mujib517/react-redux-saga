@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { put, call,all, takeLatest } from 'redux-saga/effects';
+import { put, call, all, takeLatest } from 'redux-saga/effects';
 
 export function* createTodo(action) {
   try {
@@ -21,17 +21,28 @@ export function* getTodos() {
   }
 }
 
+export function* deleteTodo(action) {
+  console.log("inside delete saga",action.todo.id);
+  yield call(axios.delete, 'https://jsonplaceholder.typicode.com/todos/' + action.todo.id);
+  yield put({ type: 'GET_TODOS' });
+}
+
 export function* get() {
-  yield takeLatest('GET_TODOS', getTodos)
+  yield takeLatest('GET_TODOS', getTodos);
 }
 
 export function* create() {
   yield takeLatest('CREATE_TODO', createTodo);
 }
 
+export function* del() {
+  yield takeLatest('DELETE_TODO', deleteTodo);
+}
+
 export default function* rootTodoSaga() {
   yield all([
     get(),
-    create()
+    create(),
+    del()
   ]);
 }

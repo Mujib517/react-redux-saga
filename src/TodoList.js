@@ -7,19 +7,28 @@ import * as actions from './actions/todoActions';
 
 class TodoList extends PureComponent {
 
+  constructor() {
+    super();
+
+    this.onDelete = this.onDelete.bind(this);
+  }
+
+  onDelete(todo) {
+    this.props.actions.deleteTodo(todo);
+  }
+
   render() {
     const items = this.props.todos || [];
 
     return (
       <List>
-        {items.map(item => <TodoListItem key={item.id} todo={item} />)}
+        {items.map(item => <TodoListItem key={item.id} todo={item} onDelete={this.onDelete} />)}
       </List>
     )
   }
 }
 
 function mapProps(state, ownProps) {
-  console.log("map props", state);
   return { todos: state.todos };
 }
 
@@ -27,9 +36,6 @@ function mapActions(dispatch) {
   var obj = {
     actions: bindActionCreators(actions, dispatch)
   };
-
-  console.log("map actions", obj);
-
   return obj;
 }
 
